@@ -1,17 +1,9 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import FaceExpression from "./features/Expression/components/FaceExpression";
+import { RouterProvider } from "react-router";
+import { router } from "./app.routes";
+import "./features/shared/styles/global.scss";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <FaceExpression />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
