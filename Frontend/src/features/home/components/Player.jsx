@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { songContext } from "../song.context";
+import { useEffect, useRef, useState } from "react";
 import { useSong } from "../hooks/useSong";
 import "../styles/player.scss";
 
@@ -17,8 +16,9 @@ function formatTime(seconds) {
 }
 
 const Player = () => {
-  const { song } = useSong();
+  const { song, loading } = useSong();
   const audioRef = useRef(null);
+  const optionsRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -32,34 +32,37 @@ const Player = () => {
       return;
     }
 
-    audio.pause();
-    audio.load();
-    audio.currentTime = 0;
-    audio.volume = volume;
-    setIsPlaying(false);
-    setCurrentTime(0);
-  }, [song?.url]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    if (!audio) {
-      return;
-    }
-
     audio.volume = volume;
   }, [volume]);
 
-  function togglePlayback() {
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    }
+
+    window.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  async function togglePlayback() {
     const audio = audioRef.current;
 
-    if (!audio) {
+    if (!audio || !song?.url || loading) {
       return;
     }
 
     if (audio.paused) {
-      audio.play();
-      setIsPlaying(true);
+      try {
+        await audio.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+      }
       return;
     }
 
@@ -81,6 +84,7 @@ const Player = () => {
 
     audio.currentTime = nextTime;
     setCurrentTime(nextTime);
+    setShowOptions(false);
   }
 
   function handleSeek(event) {
@@ -95,6 +99,17 @@ const Player = () => {
     setCurrentTime(nextTime);
   }
 
+  const progress = duration ? `${(currentTime / duration) * 100}%` : "0%";
+  const volumeProgress = `${volume * 100}%`;
+  const trackTitle = song?.title || "Waiting for the next track";
+  const moodLabel = song?.mood || "Unknown mood";
+  const playbackStatus = loading
+    ? "Curating a new track"
+    : isPlaying
+      ? "Playing now"
+      : "Paused";
+  const trackAvailable = Boolean(song?.url);
+
   return (
     <section className="player-card">
       <audio
@@ -107,26 +122,34 @@ const Player = () => {
         onEnded={() => setIsPlaying(false)}
       />
 
-      <div className="player-card__artwork">
-        <img src={song?.posterUrl} alt={song?.title || "Now playing"} />
+      <div className="player-card__visual">
+        <div className="player-card__artwork">
+          <img src={song?.posterUrl} alt={song?.title || "Now playing"} />
+        </div>
+        <span className="player-card__floating-badge player-card__floating-badge--top">
+          Mood: {moodLabel}
+        </span>
+        <span className="player-card__floating-badge player-card__floating-badge--bottom">
+          {playbackStatus}
+        </span>
       </div>
 
       <div className="player-card__content">
         <div className="player-card__header">
           <div>
             <p className="player-card__eyebrow">Now playing</p>
-            <h2>{song?.title || "Untitled track"}</h2>
-            <p className="player-card__mood">{song?.mood || "Unknown mood"}</p>
+            <h2>{trackTitle}</h2>
+            <p className="player-card__mood">{moodLabel}</p>
           </div>
 
-          <div className="player-card__options">
+          <div className="player-card__options" ref={optionsRef}>
             <button
               className="player-icon-button"
               type="button"
               onClick={() => setShowOptions((prev) => !prev)}
               aria-label="Open player options"
             >
-              ...
+              Menu
             </button>
 
             {showOptions ? (
@@ -158,6 +181,17 @@ const Player = () => {
           </div>
         </div>
 
+        <div className="player-card__summary">
+          <article>
+            <span>Status</span>
+            <strong>{playbackStatus}</strong>
+          </article>
+          <article>
+            <span>Duration</span>
+            <strong>{formatTime(duration)}</strong>
+          </article>
+        </div>
+
         <div className="player-card__progress">
           <input
             type="range"
@@ -166,6 +200,8 @@ const Player = () => {
             step="0.1"
             value={Math.min(currentTime, duration || 0)}
             onChange={handleSeek}
+            disabled={!trackAvailable || loading}
+            style={{ "--range-progress": progress }}
           />
           <div className="player-card__time">
             <span>{formatTime(currentTime)}</span>
@@ -179,6 +215,7 @@ const Player = () => {
             type="button"
             onClick={() => skipTime(-5)}
             aria-label="Go backward 5 seconds"
+            disabled={!trackAvailable || loading}
           >
             -5
           </button>
@@ -186,14 +223,16 @@ const Player = () => {
             className="player-play-button"
             type="button"
             onClick={togglePlayback}
+            disabled={!trackAvailable || loading}
           >
-            {isPlaying ? "Pause" : "Play"}
+            {loading ? "Loading..." : isPlaying ? "Pause" : "Play"}
           </button>
           <button
             className="player-icon-button"
             type="button"
             onClick={() => skipTime(5)}
             aria-label="Go forward 5 seconds"
+            disabled={!trackAvailable || loading}
           >
             +5
           </button>
@@ -209,6 +248,7 @@ const Player = () => {
             step="0.01"
             value={volume}
             onChange={(event) => setVolume(Number(event.target.value))}
+            style={{ "--range-progress": volumeProgress }}
           />
         </label>
       </div>

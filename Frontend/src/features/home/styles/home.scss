@@ -1,0 +1,214 @@
+.home-page {
+  min-height: 100vh;
+  padding: clamp(1rem, 2vw, 1.5rem);
+
+  &__shell {
+    width: min(100%, 1360px);
+    margin: 0 auto;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  &__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, 360px);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  &__hero-card,
+  &__user-card,
+  &__highlight,
+  &__panel {
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+      rgba(10, 14, 24, 0.85);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(18px);
+  }
+
+  &__hero-card {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    display: grid;
+    gap: 1.35rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -30% -10%;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 138, 61, 0.32), transparent 68%);
+      pointer-events: none;
+    }
+  }
+
+  &__eyebrow {
+    color: var(--accent-cool);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  &__headline {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.95rem;
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.5rem, 5vw, 4.8rem);
+      letter-spacing: -0.05em;
+    }
+
+    p {
+      max-width: 56ch;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+  }
+
+  &__hero-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+  }
+
+  &__user-card {
+    padding: 1.35rem;
+    display: grid;
+    gap: 1.2rem;
+    align-content: space-between;
+  }
+
+  &__user-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &__avatar {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-cool));
+    color: #07111f;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  &__user-copy {
+    p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin: 0.2rem 0;
+    }
+
+    span {
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+  }
+
+  &__highlights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  &__highlight {
+    padding: 1.2rem;
+    display: grid;
+    gap: 0.7rem;
+
+    span {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    strong {
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 420px);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  &__panel {
+    padding: clamp(1rem, 2vw, 1.25rem);
+  }
+}
+
+@media (max-width: 1100px) {
+  .home-page {
+    &__hero,
+    &__content {
+      grid-template-columns: 1fr;
+    }
+
+    &__highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .home-page {
+    &__highlights {
+      grid-template-columns: 1fr;
+    }
+
+    &__hero-card,
+    &__user-card,
+    &__highlight,
+    &__panel {
+      border-radius: 24px;
+    }
+
+    &__hero-card {
+      padding: 1.2rem;
+    }
+  }
+}

@@ -1,19 +1,24 @@
 .player-card {
   width: min(100%, 420px);
   display: grid;
-  gap: 1.25rem;
-  padding: 1.25rem;
+  gap: 1.2rem;
+  padding: 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
+  border-radius: 28px;
   background:
-    radial-gradient(circle at top, rgba(255, 140, 66, 0.25), transparent 45%),
-    linear-gradient(180deg, rgba(29, 29, 29, 0.96), rgba(10, 10, 10, 0.98));
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+    radial-gradient(circle at top, rgba(255, 140, 66, 0.22), transparent 42%),
+    linear-gradient(180deg, rgba(16, 20, 31, 0.98), rgba(6, 8, 14, 0.98));
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.34);
+
+  &__visual {
+    position: relative;
+  }
 
   &__artwork {
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     img {
       width: 100%;
@@ -21,6 +26,27 @@
       object-fit: cover;
       display: block;
     }
+  }
+
+  &__floating-badge {
+    position: absolute;
+    left: 1rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(5, 7, 12, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+  }
+
+  &__floating-badge--top {
+    top: 1rem;
+  }
+
+  &__floating-badge--bottom {
+    bottom: 1rem;
   }
 
   &__content {
@@ -35,9 +61,10 @@
     gap: 1rem;
 
     h2 {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       line-height: 1.3;
       margin-bottom: 0.35rem;
+      letter-spacing: -0.03em;
     }
   }
 
@@ -55,9 +82,36 @@
     text-transform: capitalize;
   }
 
+  &__summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+
+    article {
+      padding: 0.85rem 0.9rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    span {
+      display: block;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    strong {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 1rem;
+    }
+  }
+
   &__progress {
     display: grid;
-    gap: 0.45rem;
+    gap: 0.55rem;
   }
 
   &__time {
@@ -71,7 +125,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.8rem;
   }
 
   &__volume {
@@ -117,9 +171,20 @@
 
 .player-play-button,
 .player-icon-button {
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   color: white;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
 .player-play-button {
@@ -128,19 +193,69 @@
   border-radius: 999px;
   background: linear-gradient(135deg, #ff7a18, #ffb347);
   font-weight: 700;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
 }
 
 .player-icon-button {
-  min-width: 52px;
+  min-width: 56px;
   min-height: 52px;
-  padding: 0.85rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  padding: 0.85rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
   font-weight: 700;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .player-card input[type="range"] {
   width: 100%;
-  accent-color: #ff9b4a;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #ffb347 var(--range-progress, 0%),
+    rgba(255, 255, 255, 0.12) var(--range-progress, 0%)
+  );
   cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #0b111d;
+    background: #fff2d6;
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #0b111d;
+    background: #fff2d6;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 720px) {
+  .player-card {
+    width: 100%;
+
+    &__summary {
+      grid-template-columns: 1fr;
+    }
+  }
 }

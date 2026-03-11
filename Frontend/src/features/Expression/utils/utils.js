@@ -1,4 +1,5 @@
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+
 export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
   const vision = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
@@ -17,16 +18,18 @@ export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
   });
   videoRef.current.srcObject = streamRef.current;
   await videoRef.current.play();
-  
 };
-export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
-  console.log("button called the detect function");
 
-  if (!landmarkerRef.current || !videoRef.current) return;
+export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
+  if (!landmarkerRef.current || !videoRef.current) {
+    return null;
+  }
+
   const results = landmarkerRef.current.detectForVideo(
     videoRef.current,
     performance.now(),
   );
+
   if (results.faceBlendshapes?.length > 0) {
     const blendshapes = results.faceBlendshapes[0].categories;
     const getScore = (name) =>
@@ -48,4 +51,7 @@ export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
     setExpression(currentExpression);
     return currentExpression;
   }
+
+  setExpression("No face detected");
+  return null;
 };

@@ -1,0 +1,219 @@
+.face-card {
+  display: grid;
+  gap: 1.1rem;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h2 {
+      margin-top: 0.35rem;
+      font-size: clamp(1.6rem, 2vw, 2.1rem);
+      letter-spacing: -0.04em;
+    }
+  }
+
+  &__eyebrow,
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__eyebrow {
+    color: var(--accent-cool);
+    background: rgba(91, 209, 255, 0.08);
+    border: 1px solid rgba(91, 209, 255, 0.18);
+  }
+
+  &__status {
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &__status--ready {
+    color: var(--success);
+    border-color: rgba(114, 241, 184, 0.22);
+    background: rgba(114, 241, 184, 0.08);
+  }
+
+  &__description {
+    color: var(--text-secondary);
+    max-width: 58ch;
+  }
+
+  &__stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      radial-gradient(circle at top, rgba(255, 138, 61, 0.18), transparent 42%),
+      #070b13;
+  }
+
+  &__frame {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    min-height: 280px;
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+  }
+
+  &__reticle {
+    position: absolute;
+    inset: 1rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+  }
+
+  &__reticle::before,
+  &__reticle::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(91, 209, 255, 0.8), transparent);
+    animation: scanline 3.2s ease-in-out infinite;
+  }
+
+  &__reticle::before {
+    top: 18%;
+  }
+
+  &__reticle::after {
+    top: 78%;
+    animation-delay: 1.4s;
+  }
+
+  &__live-chip {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(7, 11, 19, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.82rem;
+  }
+
+  &__live-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ff6b5c;
+    box-shadow: 0 0 0 0 rgba(255, 107, 92, 0.55);
+    animation: pulse-dot 1.8s infinite;
+  }
+
+  &__panel {
+    display: grid;
+    gap: 1rem;
+    padding: 1.1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &__reading {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  &__label {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__expression-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.9rem;
+  }
+
+  &__expression {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    letter-spacing: -0.05em;
+    text-transform: capitalize;
+  }
+
+  &__note {
+    max-width: 42ch;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  &__tips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  &__tip {
+    padding: 0.6rem 0.8rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes scanline {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.18;
+  }
+
+  50% {
+    transform: translateY(72px);
+    opacity: 0.78;
+  }
+}
+
+@keyframes pulse-dot {
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 107, 92, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 92, 0);
+  }
+}
+
+@media (max-width: 720px) {
+  .face-card {
+    &__stage {
+      border-radius: 24px;
+    }
+
+    &__frame {
+      min-height: 240px;
+    }
+  }
+}

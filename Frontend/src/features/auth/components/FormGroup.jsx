@@ -1,15 +1,24 @@
-import React from "react";
+const FormGroup = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+  autoComplete,
+}) => {
+  const fieldId = label.toLowerCase().replace(/\s+/g, "-");
 
-const FormGroup = ({ label, placeholder, value, onChange }) => {
   return (
     <div className="form-group">
-      <label htmlFor={label}>{label}:</label>
+      <label htmlFor={fieldId}>{label}</label>
       <input
+        autoComplete={autoComplete}
         value={value}
         onChange={onChange}
-        type="text"
-        id={label}
+        type={type}
+        id={fieldId}
         placeholder={placeholder}
+        required
       />
     </div>
   );

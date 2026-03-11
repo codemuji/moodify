@@ -1,7 +1,5 @@
-import { createContext } from "react";
 import { useState } from "react";
-
-export const songContext = createContext();
+import { SongContext } from "./song.context.instance";
 
 export const SongContextProvider = ({ children }) => {
   const [song, setSong] = useState({
@@ -14,8 +12,8 @@ export const SongContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <songContext.Provider value={{ loading, setLoading, song, setSong }}>
+    <SongContext.Provider value={{ loading, setLoading, song, setSong }}>
       {children}
-    </songContext.Provider>
+    </SongContext.Provider>
   );
 };
